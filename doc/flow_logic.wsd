@@ -1,0 +1,15 @@
+@startuml "逻辑判断"
+
+start
+
+if (code == 0) then (yes)
+  if (PromotionTargetId 包含 20009) then (yes)
+    :客户端投放广告;
+  else (no)
+  endif
+else (no)
+endif
+
+stop
+@enduml
+

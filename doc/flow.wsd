@@ -1,0 +1,10 @@
+@startuml "交易模式"
+
+"APP" -> "Server": 1. 客户端请求服务端 API
+"Server" -> "美团 API": 2. Server To Server
+"美团 API" --> "Server":
+"Server" -> "Server": 逻辑判断
+"Server" --> "APP"
+
+@enduml
+
