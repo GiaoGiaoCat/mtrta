@@ -9,23 +9,23 @@ import (
 
 func main() {
 	device := &mtrta.RtaRequest_Device{
-		Os: mtrta.RtaRequest_OperatingSystem.Enum(mtrta.RtaRequest_OS_ANDROID),
-		// IdfaMd5Sum:      proto.String(""),
-		ImeiMd5Sum: proto.String("0a50d917250da0101444e165b0d83bae"),
-		// AndroidIdMd5Sum: proto.String(""),
-		// MacMd5Sum:       proto.String(""),
-		// OaidMd5Sum:      proto.String(""),
-		Ip: proto.String("106.121.177.97"),
-		// Oaid:            proto.String(""),
-		// Ipv6:            proto.String(""),
+		Os:              mtrta.RtaRequest_OperatingSystem.Enum(mtrta.RtaRequest_OS_ANDROID),
+		IdfaMd5Sum:      proto.String(""),
+		ImeiMd5Sum:      proto.String("0a50d917250da0101444e165b0d83bae"),
+		AndroidIdMd5Sum: proto.String(""),
+		MacMd5Sum:       proto.String(""),
+		OaidMd5Sum:      proto.String(""),
+		Ip:              proto.String("106.121.177.97"),
+		Oaid:            proto.String(""),
+		Ipv6:            proto.String(""),
 	}
 
 	rtaRequest := &mtrta.RtaRequest{
 		Id:     proto.String("99ace15790f118cee840a07967b04d24"),
-		IsPing: proto.Bool(true),
-		IsTest: proto.Bool(true),
+		IsPing: proto.Bool(false),
+		IsTest: proto.Bool(false),
 		Device: device,
-		SiteId: proto.String("xxx"),
+		SiteId: proto.String("xxx"), // 这里用你申请的渠道号替换
 	}
 
 	rtaurl := "https://gdtrtbdsp.meituan.com/rta?rta_site_param=netunion_rta"
@@ -35,5 +35,5 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("RequestId %v, Code %v, GetPromotionTargetId %d \n", rtaResponse.GetRequestId(), rtaResponse.GetCode(), rtaResponse.GetPromotionTargetId())
+	fmt.Printf("RequestId %v, Code %v, GetPromotionTargetId %v \n", rtaResponse.GetRequestId(), rtaResponse.GetCode(), rtaResponse.GetPromotionTargetId())
 }
