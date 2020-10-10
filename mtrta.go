@@ -14,10 +14,13 @@ import (
 
 func Request(cfg *Config, url string, req *RtaRequest) (resp *RtaResponse, err error) {
 	if cfg != nil && cfg.Mock {
+		reqID := ""
+		if req.Id != nil {
+			reqID = *req.Id
+		}
 		resp = &RtaResponse{
-			RequestId:         req.Id,
+			RequestId:         proto.String("mock_" + reqID),
 			Code:              proto.Uint32(0),
-			ProcessingTimeMs:  proto.Int32(10 * 1000),
 			PromotionTargetId: []int64{20005, 20006, 20007},
 		}
 		return
