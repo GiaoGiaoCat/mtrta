@@ -51,6 +51,7 @@ linters:
     - wsl # 和 gofumpt 冲突
     - gomnd
     - nlreturn
+    - testpackage
 
 run:
   skip-dirs:
