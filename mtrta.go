@@ -13,6 +13,18 @@ import (
 )
 
 func Request(cfg *Config, url string, req *RtaRequest) (resp *RtaResponse, err error) {
+	if cfg != nil && cfg.Mock {
+		reqID := ""
+		if req.Id != nil {
+			reqID = *req.Id
+		}
+		resp = &RtaResponse{
+			RequestId:         proto.String("mock_" + reqID),
+			Code:              proto.Uint32(0),
+			PromotionTargetId: []int64{20005, 20006, 20007},
+		}
+		return
+	}
 	payload, err := proto.Marshal(req)
 	if err != nil {
 		return resp, errors.WithStack(err)

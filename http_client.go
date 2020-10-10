@@ -16,6 +16,7 @@ type Config struct {
 	MaxConns  int
 	MaxIdle   int
 	Version   int
+	Mock      bool
 }
 
 var (
