@@ -6,18 +6,28 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/proto"
 )
 
-func Request(url string, req *RtaRequest) (resp *RtaResponse, err error) {
+func Request(cfg *Config, url string, req *RtaRequest) (resp *RtaResponse, err error) {
+	if cfg != nil && cfg.Mock {
+		resp = &RtaResponse{
+			RequestId:         req.Id,
+			Code:              proto.Uint32(0),
+			ProcessingTimeMs:  proto.Int32(10 * 1000),
+			PromotionTargetId: []int64{20005, 20006, 20007},
+		}
+		return
+	}
 	payload, err := proto.Marshal(req)
 	if err != nil {
 		return resp, errors.WithStack(err)
 	}
 
-	res, err := send(url, bytes.NewBuffer(payload))
+	res, err := send(cfg, url, bytes.NewBuffer(payload))
 	// Check for response error
 	if err != nil {
 		return resp, errors.WithStack(err)
@@ -38,13 +48,16 @@ func Request(url string, req *RtaRequest) (resp *RtaResponse, err error) {
 	return rtaResponse, nil
 }
 
-func send(url string, body io.Reader) (*http.Response, error) {
+func send(cfg *Config, url string, body io.Reader) (*http.Response, error) {
 	// Pass context.Background() to SendWithContext
-	return sendWithContext(context.Background(), url, body)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Millisecond)
+	defer cancel()
+
+	return sendWithContext(ctx, cfg, url, body)
 }
 
 // Sending an HTTP request and accepting context.
-func sendWithContext(ctx context.Context, url string, body io.Reader) (*http.Response, error) {
+func sendWithContext(ctx context.Context, cfg *Config, url string, body io.Reader) (*http.Response, error) {
 	// Change NewRequest to NewRequestWithContext and pass context it
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, body)
 	if err != nil {
@@ -53,7 +66,7 @@ func sendWithContext(ctx context.Context, url string, body io.Reader) (*http.Res
 
 	req.Header.Add("Content-Type", "application/x-protobuf;charset=UTF-8")
 
-	res, err := http.DefaultClient.Do(req)
+	res, err := GetHTTPClient(cfg).Do(req)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
