@@ -53,7 +53,11 @@ func Request(cfg *Config, url string, req *RtaRequest) (resp *RtaResponse, err e
 
 func send(cfg *Config, url string, body io.Reader) (*http.Response, error) {
 	// Pass context.Background() to SendWithContext
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Millisecond)
+	to := 60 * time.Millisecond
+	if cfg != nil && cfg.Timeout != 0 {
+		to = cfg.Timeout
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), to)
 	defer cancel()
 
 	return sendWithContext(ctx, cfg, url, body)

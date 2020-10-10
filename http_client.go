@@ -11,12 +11,13 @@ import (
 )
 
 type Config struct {
-	Dial      time.Duration
-	KeepAlive time.Duration
-	MaxConns  int
-	MaxIdle   int
-	Version   int
-	Mock      bool
+	Dial      time.Duration `json:"dial"`
+	KeepAlive time.Duration `json:"keep_alive"`
+	Timeout   time.Duration `json:"timeout"`
+	MaxConns  int           `json:"max_conns"`
+	MaxIdle   int           `json:"max_idle"`
+	Version   int           `json:"version"`
+	Mock      bool          `json:"mock"`
 }
 
 var (

@@ -1,6 +1,7 @@
 package mtrta
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 
@@ -16,6 +17,9 @@ func TestConfigMarshal(t *testing.T) {
 		Version:   0,
 	}
 	bb, _ := yaml.Marshal(c)
+	t.Log(string(bb))
+
+	bb, _ = json.Marshal(c)
 	t.Log(string(bb))
 }
 
